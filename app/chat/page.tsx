@@ -12,6 +12,7 @@ const ParkingMap = dynamic(() => import('../components/parking-map'), {
   loading: () => <p className="h-80 flex items-center justify-center bg-gray-100 rounded-lg">Caricamento mappa...</p>
 });
 
+
 export default function Chat() {
   const [coords, setCoords] = useState({ lat: 0, lng: 0 });
   const [dots, setDots] = useState('');
