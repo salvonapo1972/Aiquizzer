@@ -10,8 +10,12 @@ export async function POST(req: Request) {
     const body = await req.json();
 
     const articleId = body?.articleId;
+    const limitSup = body?.limitSup;
+    const limitDown = body?.limitDown;
 
     console.log('articleId:', articleId);
+    console.log('limitSup:', limitSup);
+    console.log('limitDown:', limitDown);
 
     /*
      * =====================================================
@@ -23,7 +27,11 @@ export async function POST(req: Request) {
 
     const { rows } = await db.query(`
       SELECT content
-      FROM document_sections
+        FROM (
+            SELECT ROW_NUMBER() OVER () AS rownum, * 
+            FROM document_sections ds 
+        ) sub
+        WHERE rownum BETWEEN ${limitDown} AND ${limitSup}; 
     `);
 
     console.log(
@@ -96,7 +104,7 @@ le informazioni contenute nel testo fornito.
 
 Regole obbligatorie:
 
-- genera esattamente 3 domande;
+- genera esattamente 50 domande;
 - ogni domanda deve avere esattamente 4 opzioni;
 - una sola opzione deve essere corretta;
 - correctAnswerIndex deve essere:

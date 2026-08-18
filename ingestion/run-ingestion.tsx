@@ -4,7 +4,7 @@ import { extractText } from 'unpdf';
 import { ingestDocuments } from '../app/lib/ingestDocuments'; // Assicurati che il percorso sia corretto
 
 // 1. Funzione di Utility per dividere il testo estratto in blocchi (Chunking)
-function splitTextIntoChunks(text: string, chunkSize = 1000): string[] {
+function splitTextIntoChunks(text: string, chunkSize = 100): string[] {
   // Sostituisce spazi multipli e a capo continui con uno spazio singolo
   const cleanSpaceText = text.replace(/\s+/g, ' ').trim();
   const words = cleanSpaceText.split(' ');
@@ -29,7 +29,7 @@ function splitTextIntoChunks(text: string, chunkSize = 1000): string[] {
 // 2. Funzione Principale
 async function main() {
   // Inserisci qui il percorso assoluto o relativo del tuo file PDF
-  const pdfPath = path.join('D:/Progetti/NextJs/Guida-alla-compilazione-delle-Dichiarazioni-di-accessibilita.pdf'); 
+  const pdfPath = path.join('D:/Progetti/NextJs/pmbokguide_eighthed_eng.pdf'); 
 
   if (!fs.existsSync(pdfPath)) {
     console.error(`Errore: Il file PDF non esiste al percorso: ${pdfPath}`);

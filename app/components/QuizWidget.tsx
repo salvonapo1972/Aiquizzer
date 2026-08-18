@@ -1,43 +1,45 @@
-'use client';
+"use client";
 
-import { useObject } from '@ai-sdk/react';
-import { useState } from 'react';
+import { useObject } from "@ai-sdk/react";
+import { useState } from "react";
 
-import { quizSchema } from '../api/chat/schema';
+import { quizSchema } from "../api/chat/schema";
 
 interface QuizWidgetProps {
   articleId?: string;
+  limitSup?: string;
+  limitDown?: string;
 }
 
 export default function QuizWidget({
-  articleId="0",
+  articleId = "0",
+  limitSup = "6000",
+  limitDown = "5000",
 }: QuizWidgetProps) {
-
   /* =====================================================
      APERTURA PANNELLO
   ===================================================== */
 
-  const [isOpen, setIsOpen] =
-    useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   /* =====================================================
      QUIZ
   ===================================================== */
 
-  const [quizStarted, setQuizStarted] =
-    useState(false);
+  const [quizStarted, setQuizStarted] = useState(false);
 
-  const [quizFinished, setQuizFinished] =
-    useState(false);
+  const [quizFinished, setQuizFinished] = useState(false);
 
-  const [currentQuestion, setCurrentQuestion] =
-    useState(0);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
 
-  const [selectedAnswers, setSelectedAnswers] =
-    useState<Record<number, number>>({});
+  const [selectedAnswers, setSelectedAnswers] = useState<
+    Record<number, number>
+  >({});
 
-  const [score, setScore] =
-    useState(0);
+  const [score, setScore] = useState(0);
+
+  const [limitSupValue, setLimitSupValue] = useState(limitSup);
+  const [limitDownValue, setLimitDownValue] = useState(limitDown);
 
   /* =====================================================
      USE OBJECT
@@ -49,7 +51,7 @@ export default function QuizWidget({
     isLoading: isQuizLoading,
     error: quizError,
   } = useObject({
-    api: '/api/quiz',
+    api: "/api/quiz",
     schema: quizSchema,
   });
 
@@ -57,30 +59,24 @@ export default function QuizWidget({
      DOMANDE
   ===================================================== */
 
-  const questions =
-    quiz?.questions ?? [];
+  const questions = quiz?.questions ?? [];
 
-  const question =
-    questions[currentQuestion];
+  const question = questions[currentQuestion];
 
   /* =====================================================
      RISPOSTA SELEZIONATA
   ===================================================== */
 
-  const selectedAnswer =
-    selectedAnswers[currentQuestion];
+  const selectedAnswer = selectedAnswers[currentQuestion];
 
-  const hasAnswered =
-    selectedAnswer !== undefined;
+  const hasAnswered = selectedAnswer !== undefined;
 
   /* =====================================================
      APRI / CHIUDI
   ===================================================== */
 
   const toggleQuiz = () => {
-    setIsOpen(
-      previous => !previous
-    );
+    setIsOpen((previous) => !previous);
   };
 
   /* =====================================================
@@ -88,19 +84,13 @@ export default function QuizWidget({
   ===================================================== */
 
   const startQuiz = () => {
-
     if (!articleId) {
-      console.error(
-        'articleId non presente'
-      );
+      console.error("articleId non presente");
 
       return;
     }
 
-    console.log(
-      'Avvio quiz per articleId:',
-      articleId
-    );
+    console.log("Avvio quiz per articleId:", articleId);
 
     /*
      * Reset
@@ -118,6 +108,8 @@ export default function QuizWidget({
 
     submitQuiz({
       articleId,
+      limitSup: limitSupValue,
+      limitDown: limitDownValue,
     });
   };
 
@@ -125,10 +117,7 @@ export default function QuizWidget({
      RISPOSTA ALLA DOMANDA
   ===================================================== */
 
-  const answerQuestion = (
-    index: number
-  ) => {
-
+  const answerQuestion = (index: number) => {
     if (!question) {
       return;
     }
@@ -145,26 +134,17 @@ export default function QuizWidget({
      * Salva risposta
      */
 
-    setSelectedAnswers(
-      previous => ({
-        ...previous,
-        [currentQuestion]: index,
-      })
-    );
+    setSelectedAnswers((previous) => ({
+      ...previous,
+      [currentQuestion]: index,
+    }));
 
     /*
      * Aggiorna punteggio
      */
 
-    if (
-      index ===
-      question.correctAnswerIndex
-    ) {
-
-      setScore(
-        previous =>
-          previous + 1
-      );
+    if (index === question.correctAnswerIndex) {
+      setScore((previous) => previous + 1);
     }
   };
 
@@ -173,16 +153,8 @@ export default function QuizWidget({
   ===================================================== */
 
   const nextQuestion = () => {
-
-    if (
-      currentQuestion <
-      questions.length - 1
-    ) {
-
-      setCurrentQuestion(
-        previous =>
-          previous + 1
-      );
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion((previous) => previous + 1);
 
       return;
     }
@@ -199,7 +171,6 @@ export default function QuizWidget({
   ===================================================== */
 
   const restartQuiz = () => {
-
     setQuizStarted(false);
     setQuizFinished(false);
     setCurrentQuestion(0);
@@ -223,13 +194,11 @@ export default function QuizWidget({
         items-end
       "
     >
-
       {/* =================================================
           PANNELLO QUIZ
       ================================================= */}
 
       {isOpen && (
-
         <div
           className="
             w-[360px]
@@ -248,7 +217,6 @@ export default function QuizWidget({
             flex-col
           "
         >
-
           {/* =================================================
               HEADER
           ================================================= */}
@@ -264,7 +232,6 @@ export default function QuizWidget({
               flex-shrink-0
             "
           >
-
             <div
               className="
                 flex
@@ -272,7 +239,6 @@ export default function QuizWidget({
                 gap-3
               "
             >
-
               <div
                 className="
                   w-9
@@ -289,7 +255,6 @@ export default function QuizWidget({
               </div>
 
               <div>
-
                 <div
                   className="
                     font-bold
@@ -307,9 +272,7 @@ export default function QuizWidget({
                 >
                   Mettiti alla prova
                 </div>
-
               </div>
-
             </div>
 
             <button
@@ -324,7 +287,6 @@ export default function QuizWidget({
             >
               ✕
             </button>
-
           </header>
 
           {/* =================================================
@@ -337,13 +299,11 @@ export default function QuizWidget({
               flex-1
             "
           >
-
             {/* =================================================
                 ARTICLE ID MANCANTE
             ================================================= */}
 
             {!articleId && (
-
               <div
                 className="
                   m-4
@@ -356,16 +316,10 @@ export default function QuizWidget({
                   text-sm
                 "
               >
-                <strong>
-                  Attenzione
-                </strong>
+                <strong>Attenzione</strong>
 
-                <p className="mt-1">
-                  Non è stato fornito
-                  l'articleId.
-                </p>
+                <p className="mt-1">Non è stato fornito l'articleId.</p>
               </div>
-
             )}
 
             {/* =================================================
@@ -373,14 +327,12 @@ export default function QuizWidget({
             ================================================= */}
 
             {!quizStarted && (
-
               <div
                 className="
                   p-6
                   text-center
                 "
               >
-
                 <div
                   className="
                     text-5xl
@@ -409,16 +361,114 @@ export default function QuizWidget({
                     mb-6
                   "
                 >
-                  Rispondi a 3 domande
-                  sull'articolo.
+                  Rispondi alle domande.
                 </p>
+                <div className="mb-5 text-left">
+                  <label
+                    htmlFor="limitDown"
+                    className="
+      block
+      text-xs
+      font-semibold
+      text-zinc-700
+      dark:text-zinc-300
+      mb-1
+    "
+                  >
+                    Limite minimo caratteri
+                  </label>
+
+                  <input
+                    id="limitDown"
+                    type="number"
+                    min="100"
+                    max="50000"
+                    value={limitDownValue}
+                    onChange={(e) => setLimitDownValue(e.target.value)}
+                    className="
+      w-full
+      px-3
+      py-2
+      rounded-lg
+      border
+      border-zinc-300
+      dark:border-zinc-700
+      bg-white
+      dark:bg-zinc-800
+      text-sm
+      text-zinc-900
+      dark:text-white
+      focus:outline-none
+      focus:ring-2
+      focus:ring-indigo-500
+    "
+                  />
+
+                  <p className="mt-1 text-[10px] text-zinc-500">
+                    Il contenuto deve avere almeno questo numero di caratteri.
+                  </p>
+
+                  <label
+                    htmlFor="limitSup"
+                    className="
+      block
+      text-xs
+      font-semibold
+      text-zinc-700
+      dark:text-zinc-300
+      mt-4
+      mb-1
+    "
+                  >
+                    Limite massimo caratteri
+                  </label>
+
+                  <input
+                    id="limitSup"
+                    type="number"
+                    min="100"
+                    max="50000"
+                    value={limitSupValue}
+                    onChange={(e) => setLimitSupValue(e.target.value)}
+                    className="
+      w-full
+      px-3
+      py-2
+      rounded-lg
+      border
+      border-zinc-300
+      dark:border-zinc-700
+      bg-white
+      dark:bg-zinc-800
+      text-sm
+      text-zinc-900
+      dark:text-white
+      focus:outline-none
+      focus:ring-2
+      focus:ring-indigo-500
+    "
+                  />
+
+                  <p className="mt-1 text-[10px] text-zinc-500">
+                    Il contenuto verrà limitato a questo numero di caratteri.
+                  </p>
+
+                  {Number(limitDownValue) >= Number(limitSupValue) && (
+                    <p className="mt-2 text-xs text-red-600">
+                      Il limite minimo deve essere inferiore al limite massimo.
+                    </p>
+                  )}
+                </div>
 
                 <button
                   type="button"
                   onClick={startQuiz}
                   disabled={
                     !articleId ||
-                    isQuizLoading
+                    isQuizLoading ||
+                    !limitDownValue ||
+                    !limitSupValue ||
+                    Number(limitDownValue) >= Number(limitSupValue)
                   }
                   className="
                     w-full
@@ -434,13 +484,9 @@ export default function QuizWidget({
                     transition
                   "
                 >
-                  {isQuizLoading
-                    ? 'Generazione...'
-                    : 'Genera Quiz'}
+                  {isQuizLoading ? "Generazione..." : "Genera Quiz"}
                 </button>
-
               </div>
-
             )}
 
             {/* =================================================
@@ -448,7 +494,6 @@ export default function QuizWidget({
             ================================================= */}
 
             {quizError && (
-
               <div
                 className="
                   m-4
@@ -461,7 +506,6 @@ export default function QuizWidget({
                   text-sm
                 "
               >
-
                 <div
                   className="
                     font-bold
@@ -471,16 +515,17 @@ export default function QuizWidget({
                   Errore nella generazione
                 </div>
 
-                <div>
-                  {quizError.message}
-                </div>
+                <div>{quizError.message}</div>
 
                 <button
                   type="button"
                   onClick={startQuiz}
                   disabled={
                     !articleId ||
-                    isQuizLoading
+                    isQuizLoading ||
+                    !limitDownValue ||
+                    !limitSupValue ||
+                    Number(limitDownValue) >= Number(limitSupValue)
                   }
                   className="
                     mt-3
@@ -497,28 +542,22 @@ export default function QuizWidget({
                 >
                   Riprova
                 </button>
-
               </div>
-
             )}
 
             {/* =================================================
                 LOADING
             ================================================= */}
 
-            {quizStarted &&
-              isQuizLoading &&
-              questions.length === 0 && (
-
-                <div
-                  className="
+            {quizStarted && isQuizLoading && questions.length === 0 && (
+              <div
+                className="
                     p-8
                     text-center
                   "
-                >
-
-                  <div
-                    className="
+              >
+                <div
+                  className="
                       w-10
                       h-10
                       mx-auto
@@ -529,134 +568,109 @@ export default function QuizWidget({
                       rounded-full
                       animate-spin
                     "
-                  />
+                />
 
-                  <p
-                    className="
+                <p
+                  className="
                       text-sm
                       text-zinc-500
                     "
-                  >
-                    Sto preparando
-                    il quiz...
-                  </p>
-
-                </div>
-
-              )}
+                >
+                  Sto preparando il quiz...
+                </p>
+              </div>
+            )}
 
             {/* =================================================
                 DOMANDA
             ================================================= */}
 
-            {quizStarted &&
-              !quizFinished &&
-              question && (
-
-                <div
-                  className="
+            {quizStarted && !quizFinished && question && (
+              <div
+                className="
                     p-5
                   "
-                >
-
-                  {/* =================================================
+              >
+                {/* =================================================
                       TITOLO
                   ================================================= */}
 
-                  <div
-                    className="
+                <div
+                  className="
                       border-b
                       border-zinc-200
                       dark:border-zinc-700
                       pb-4
                       mb-5
                     "
-                  >
-
-                    <h2
-                      className="
+                >
+                  <h2
+                    className="
                         font-bold
                         text-base
                         text-zinc-900
                         dark:text-white
                       "
-                    >
-                      {quiz?.quizTitle ??
-                        'Quiz'}
-                    </h2>
+                  >
+                    {quiz?.quizTitle ?? "Quiz"}
+                  </h2>
 
-                    <div
-                      className="
+                  <div
+                    className="
                         flex
                         justify-between
                         mt-3
                         text-xs
                         text-zinc-500
                       "
-                    >
+                  >
+                    <span>
+                      Domanda {currentQuestion + 1} di {questions.length}
+                    </span>
 
-                      <span>
-                        Domanda{' '}
-                        {currentQuestion + 1}
-                        {' '}di{' '}
-                        {questions.length}
-                      </span>
-
-                      <span
-                        className="
+                    <span
+                      className="
                           font-semibold
                           text-indigo-600
                         "
-                      >
-                        Punteggio: {score}
-                      </span>
-
-                    </div>
-
+                    >
+                      Punteggio: {score}
+                    </span>
                   </div>
+                </div>
 
-                  {/* =================================================
+                {/* =================================================
                       DOMANDA
                   ================================================= */}
 
-                  <p
-                    className="
+                <p
+                  className="
                       font-semibold
                       text-sm
                       mb-5
                       text-zinc-900
                       dark:text-white
                     "
-                  >
-                    {question.questionText}
-                  </p>
+                >
+                  {question.questionText}
+                </p>
 
-                  {/* =================================================
+                {/* =================================================
                       RISPOSTE
                   ================================================= */}
 
-                  <div
-                    className="
+                <div
+                  className="
                       grid
                       gap-3
                     "
-                  >
+                >
+                  {question.options?.map((option, index) => {
+                    const correct = index === question.correctAnswerIndex;
 
-                    {question.options?.map(
-                      (
-                        option,
-                        index
-                      ) => {
+                    const selected = index === selectedAnswer;
 
-                        const correct =
-                          index ===
-                          question.correctAnswerIndex;
-
-                        const selected =
-                          index ===
-                          selectedAnswer;
-
-                        let optionClass = `
+                    let optionClass = `
                           border-zinc-200
                           dark:border-zinc-700
                           bg-white
@@ -666,44 +680,29 @@ export default function QuizWidget({
                           dark:hover:bg-indigo-950
                         `;
 
-                        if (
-                          hasAnswered
-                        ) {
-
-                          if (correct) {
-
-                            optionClass = `
+                    if (hasAnswered) {
+                      if (correct) {
+                        optionClass = `
                               border-green-500
                               bg-green-50
                               dark:bg-green-950
                             `;
-
-                          } else if (
-                            selected
-                          ) {
-
-                            optionClass = `
+                      } else if (selected) {
+                        optionClass = `
                               border-red-500
                               bg-red-50
                               dark:bg-red-950
                             `;
-                          }
-                        }
+                      }
+                    }
 
-                        return (
-
-                          <button
-                            key={index}
-                            type="button"
-                            disabled={
-                              hasAnswered
-                            }
-                            onClick={() =>
-                              answerQuestion(
-                                index
-                              )
-                            }
-                            className={`
+                    return (
+                      <button
+                        key={index}
+                        type="button"
+                        disabled={hasAnswered}
+                        onClick={() => answerQuestion(index)}
+                        className={`
                               w-full
                               p-3
                               rounded-xl
@@ -713,10 +712,9 @@ export default function QuizWidget({
                               transition
                               ${optionClass}
                             `}
-                          >
-
-                            <span
-                              className="
+                      >
+                        <span
+                          className="
                                 inline-flex
                                 items-center
                                 justify-center
@@ -728,63 +726,49 @@ export default function QuizWidget({
                                 text-indigo-700
                                 font-bold
                               "
-                            >
-                              {String.fromCharCode(
-                                65 + index
-                              )}
-                            </span>
+                        >
+                          {String.fromCharCode(65 + index)}
+                        </span>
 
-                            {option}
+                        {option}
 
-                            {hasAnswered &&
-                              correct && (
-
-                                <span
-                                  className="
+                        {hasAnswered && correct && (
+                          <span
+                            className="
                                     float-right
                                     text-green-600
                                     font-bold
                                     text-lg
                                   "
-                                >
-                                  ✓
-                                </span>
+                          >
+                            ✓
+                          </span>
+                        )}
 
-                              )}
-
-                            {hasAnswered &&
-                              selected &&
-                              !correct && (
-
-                                <span
-                                  className="
+                        {hasAnswered && selected && !correct && (
+                          <span
+                            className="
                                     float-right
                                     text-red-600
                                     font-bold
                                     text-lg
                                   "
-                                >
-                                  ✕
-                                </span>
+                          >
+                            ✕
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
 
-                              )}
-
-                          </button>
-
-                        );
-                      }
-                    )}
-
-                  </div>
-
-                  {/* =================================================
+                {/* =================================================
                       SPIEGAZIONE
                   ================================================= */}
 
-                  {hasAnswered && (
-
-                    <div
-                      className="
+                {hasAnswered && (
+                  <div
+                    className="
                         mt-4
                         p-4
                         rounded-xl
@@ -794,48 +778,41 @@ export default function QuizWidget({
                         border-zinc-200
                         dark:border-zinc-700
                       "
-                    >
-
-                      <div
-                        className="
+                  >
+                    <div
+                      className="
                           text-xs
                           font-bold
                           mb-2
                         "
-                      >
-                        {selectedAnswer ===
-                        question.correctAnswerIndex
-                          ? '✓ Risposta corretta'
-                          : '✕ Risposta errata'}
-                      </div>
+                    >
+                      {selectedAnswer === question.correctAnswerIndex
+                        ? "✓ Risposta corretta"
+                        : "✕ Risposta errata"}
+                    </div>
 
-                      <p
-                        className="
+                    <p
+                      className="
                           text-xs
                           leading-relaxed
                           text-zinc-600
                           dark:text-zinc-300
                         "
-                      >
-                        {question.explanation}
-                      </p>
+                    >
+                      {question.explanation}
+                    </p>
+                  </div>
+                )}
 
-                    </div>
-
-                  )}
-
-                  {/* =================================================
+                {/* =================================================
                       NEXT
                   ================================================= */}
 
-                  {hasAnswered && (
-
-                    <button
-                      type="button"
-                      onClick={
-                        nextQuestion
-                      }
-                      className="
+                {hasAnswered && (
+                  <button
+                    type="button"
+                    onClick={nextQuestion}
+                    className="
                         mt-4
                         w-full
                         bg-indigo-600
@@ -847,32 +824,26 @@ export default function QuizWidget({
                         font-semibold
                         transition
                       "
-                    >
-                      {currentQuestion <
-                      questions.length - 1
-                        ? 'Domanda successiva →'
-                        : 'Termina quiz'}
-                    </button>
-
-                  )}
-
-                </div>
-
-              )}
+                  >
+                    {currentQuestion < questions.length - 1
+                      ? "Domanda successiva →"
+                      : "Termina quiz"}
+                  </button>
+                )}
+              </div>
+            )}
 
             {/* =================================================
                 RISULTATO
             ================================================= */}
 
             {quizFinished && (
-
               <div
                 className="
                   p-7
                   text-center
                 "
               >
-
                 <div
                   className="
                     text-5xl
@@ -916,9 +887,7 @@ export default function QuizWidget({
 
                 <button
                   type="button"
-                  onClick={
-                    restartQuiz
-                  }
+                  onClick={restartQuiz}
                   className="
                     w-full
                     bg-indigo-600
@@ -932,15 +901,10 @@ export default function QuizWidget({
                 >
                   Rifai il quiz
                 </button>
-
               </div>
-
             )}
-
           </div>
-
         </div>
-
       )}
 
       {/* =====================================================
@@ -950,11 +914,7 @@ export default function QuizWidget({
       <button
         type="button"
         onClick={toggleQuiz}
-        aria-label={
-          isOpen
-            ? 'Chiudi quiz'
-            : 'Apri quiz'
-        }
+        aria-label={isOpen ? "Chiudi quiz" : "Apri quiz"}
         className="
           fixed
           bottom-6
@@ -978,9 +938,8 @@ export default function QuizWidget({
           hover:scale-105
         "
       >
-        {isOpen ? '✕' : '📝'}
+        {isOpen ? "✕" : "📝"}
       </button>
-
     </div>
   );
 }

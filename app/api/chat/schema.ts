@@ -21,7 +21,7 @@ export const quizSchema = z.object({
       correctAnswerIndex: z
         .number()
         .min(0)
-        .max(3),
+        .max(50),
 
       explanation: z.string(),
     })
