@@ -4,7 +4,7 @@ import { db } from '@/app/lib/db';
 import { quizSchema } from '../chat/schema';
 
 export async function POST(req: Request) {
-  console.log('=== POST /api/chat ===');
+  console.log('=== POST /api/quiz ===');
 
   try {
     const body = await req.json();
