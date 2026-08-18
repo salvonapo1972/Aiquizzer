@@ -135,7 +135,7 @@ ${content}
 --------------------------------
 FINE CONTENUTO
 --------------------------------
-      `,
+  Livello di difficoltà richiesto:avanzato    `,
     });
 
     console.log(
