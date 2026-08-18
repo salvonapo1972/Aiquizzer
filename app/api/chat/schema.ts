@@ -7,7 +7,7 @@ export const quizSchema = z.object({
   questions: z.array(
     z.object({
       questionText: z.string(),
-
+      difficulty: z.enum(['principiante', 'intermedio', 'avanzato']),
       options: z.array(
         z.string()
       ),
