@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ClerkProvider, Show, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs'
+import { ClerkProvider, Show, SignUpButton, UserButton } from '@clerk/nextjs'
 import { Cinzel, Lora,Geist, Geist_Mono  } from "next/font/google";
 import "./globals.css";
 import QuizWidget from "./components/QuizWidget";
@@ -25,8 +25,8 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "Canti Reginae Apostolorum alla Montagnola",
-  description: "Canti Reginae Apostolorum alla Montagnola",
+  title: "AI Quizzer",
+  description: "AI Quizzer",
 };
 
 export default function RootLayout({

@@ -2,26 +2,10 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ArrowDown, BookOpen } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import Link from 'next/link';
-import { useState} from 'react';
 export default function Hero() {
-/*  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
-if (typeof window !== "undefined") {
-    console.log("This also safely runs only in the browser environment");
-  
-    
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setCoords({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
-        },
-        (error) => console.error("Errore geolocalizzazione:", error),
-        { enableHighAccuracy: true }
-      );
-    }*/
+
   return (
     <section className="relative h-screen overflow-hidden">
 

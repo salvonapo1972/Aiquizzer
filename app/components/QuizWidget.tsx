@@ -1,7 +1,7 @@
 "use client";
 
 import { useObject } from "@ai-sdk/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { quizSchema } from "../api/chat/schema";
 
@@ -9,12 +9,22 @@ interface QuizWidgetProps {
   articleId?: string;
   limitSup?: string;
   limitDown?: string;
+  knowledgeid?: string;
 }
+
+const KNOWLEDGE_OPTIONS = [
+  { id: "0", label: "Project Management" },
+  { id: "1", label: "Guerra Greci - Persiani" },
+  { id: "2", label: "Polinomi" },
+  { id: "3", label: "Economia e Finanza" },
+  { id: "4", label: "Medicina e Salute" },
+];
 
 export default function QuizWidget({
   articleId = "0",
-  limitSup = "6000",
-  limitDown = "5000",
+  limitSup = "1000",
+  limitDown = "0",
+  knowledgeid = "0",
 }: QuizWidgetProps) {
   /* =====================================================
      APERTURA PANNELLO
@@ -40,6 +50,11 @@ export default function QuizWidget({
 
   const [limitSupValue, setLimitSupValue] = useState(limitSup);
   const [limitDownValue, setLimitDownValue] = useState(limitDown);
+  const [knowledgeidValue, setKnowledgeidValue] = useState(knowledgeid);
+
+  useEffect(() => {
+    setKnowledgeidValue(knowledgeid);
+  }, [knowledgeid]);
 
   /* =====================================================
      USE OBJECT
@@ -110,6 +125,7 @@ export default function QuizWidget({
       articleId,
       limitSup: limitSupValue,
       limitDown: limitDownValue,
+      knowledgeid: knowledgeidValue,
     });
   };
 
@@ -363,6 +379,29 @@ export default function QuizWidget({
                 >
                   Rispondi alle domande.
                 </p>
+
+                {/* COMBOBOX (SELECT) */}
+                <div className="text-left mb-6">
+                  <label
+                    htmlFor="knowledge-select"
+                    className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2"
+                  >
+                    Ambito di Conoscenza
+                  </label>
+                  <select
+                    id="knowledge-select"
+                    value={knowledgeidValue}
+                    onChange={(e) => setKnowledgeidValue(e.target.value)}
+                    className="w-full p-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm font-medium text-zinc-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition cursor-pointer"
+                  >
+                    {KNOWLEDGE_OPTIONS.map((option) => (
+                      <option key={option.id} value={option.id}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
                 <div className="mb-5 text-left">
                   <label
                     htmlFor="limitDown"
@@ -375,7 +414,7 @@ export default function QuizWidget({
       mb-1
     "
                   >
-                    Limite minimo caratteri
+                    Limite minimo elementi
                   </label>
 
                   <input
@@ -405,7 +444,7 @@ export default function QuizWidget({
                   />
 
                   <p className="mt-1 text-[10px] text-zinc-500">
-                    Il contenuto deve avere almeno questo numero di caratteri.
+                    Il contenuto deve avere almeno questo numero di elementi.
                   </p>
 
                   <label
@@ -420,7 +459,7 @@ export default function QuizWidget({
       mb-1
     "
                   >
-                    Limite massimo caratteri
+                    Limite massimo elementi
                   </label>
 
                   <input
@@ -450,7 +489,7 @@ export default function QuizWidget({
                   />
 
                   <p className="mt-1 text-[10px] text-zinc-500">
-                    Il contenuto verrà limitato a questo numero di caratteri.
+                    Il contenuto verrà limitato a questo numero di elementi.
                   </p>
 
                   {Number(limitDownValue) >= Number(limitSupValue) && (
@@ -468,6 +507,7 @@ export default function QuizWidget({
                     isQuizLoading ||
                     !limitDownValue ||
                     !limitSupValue ||
+                    !knowledgeidValue ||
                     Number(limitDownValue) >= Number(limitSupValue)
                   }
                   className="
@@ -525,6 +565,7 @@ export default function QuizWidget({
                     isQuizLoading ||
                     !limitDownValue ||
                     !limitSupValue ||
+                    !knowledgeidValue ||
                     Number(limitDownValue) >= Number(limitSupValue)
                   }
                   className="

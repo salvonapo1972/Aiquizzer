@@ -13,6 +13,7 @@ export async function POST(req: Request) {
     const articleId = body?.articleId;
     const limitSup = body?.limitSup;
     const limitDown = body?.limitDown;
+    const knowledgeid = body?.knowledgeid;
 
     console.log('articleId:', articleId);
     console.log('limitSup:', limitSup);
@@ -30,7 +31,7 @@ export async function POST(req: Request) {
       SELECT content
         FROM (
             SELECT ROW_NUMBER() OVER () AS rownum, * 
-            FROM document_sections ds 
+            FROM document_sections ds where  knowledge_id = ${knowledgeid}
         ) sub
         WHERE rownum BETWEEN ${limitDown} AND ${limitSup}; 
     `);

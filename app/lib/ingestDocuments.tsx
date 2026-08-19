@@ -11,7 +11,7 @@ function chunkArray<T>(array: T[], size: number): T[][] {
   return result;
 }
 
-export async function ingestDocuments(chunks: string[]) {
+export async function ingestDocuments(chunks: string[],knowledgeid: string) {
   if (chunks.length === 0) return;
 
   // Dividiamo i chunks in gruppi (es. 50 frammenti alla volta per non superare i limiti di token)
@@ -40,8 +40,8 @@ export async function ingestDocuments(chunks: string[]) {
         const vectorString = JSON.stringify(embeddings[i]);
 
         await client.query(
-          `INSERT INTO document_sections (content, embedding) VALUES ($1, $2::vector)`,
-          [currentBatch[i], vectorString]
+          `INSERT INTO document_sections (content, embedding,knowledge_id) VALUES ($1, $2::vector,$3)`,
+          [currentBatch[i], vectorString,knowledgeid]
         );
       }
       await client.query('COMMIT');

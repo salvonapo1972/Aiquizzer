@@ -27,9 +27,9 @@ function splitTextIntoChunks(text: string, chunkSize = 100): string[] {
 }
 
 // 2. Funzione Principale
-async function main() {
+async function main(knowledgeid: string,nomefile: string) {
   // Inserisci qui il percorso assoluto o relativo del tuo file PDF
-  const pdfPath = path.join('D:/Progetti/NextJs/pmbokguide_eighthed_eng.pdf'); 
+  const pdfPath = path.join('D:/Progetti/NextJs/' + nomefile); 
 
   if (!fs.existsSync(pdfPath)) {
     console.error(`Errore: Il file PDF non esiste al percorso: ${pdfPath}`);
@@ -59,7 +59,7 @@ async function main() {
 
 
     const frammenti = splitTextIntoChunks(testoCompleto);
-    await ingestDocuments(frammenti);
+    await ingestDocuments(frammenti,knowledgeid);
 
   } catch (error) {
     console.error("Errore durante l'estrazione con unpdf:", error);
@@ -67,4 +67,7 @@ async function main() {
 }
 
 // Avvia lo script
-main().catch(console.error);
+const args = process.argv.slice(2);
+const knowledgeidInput = args[0];
+const nomefileInput = args[1];
+main(knowledgeidInput,nomefileInput).catch(console.error);
