@@ -118,7 +118,8 @@ Regole obbligatorie:
 - non usare informazioni esterne;
 - non inventare informazioni;
 - le domande devono essere diverse;
-- evita domande ambigue.
+- evita domande ambigue;
+- disponi le risposte esatte in maniera casuale;
 - principiante: definizioni di base, concetti chiave, nessuna sintassi complessa.
 - intermedio: scenari d'uso, risoluzione di problemi comuni, combinazione di più concetti.
 - avanzato: casi limite (edge cases), ottimizzazione delle prestazioni, architettura profonda
