@@ -366,7 +366,7 @@ export default function QuizWidget({
                     dark:text-white
                   "
                 >
-                  Quiz dell'articolo
+                  Quiz
                 </h2>
 
                 <p
