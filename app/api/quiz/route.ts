@@ -1,7 +1,7 @@
 import { streamObject } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import { db } from '@/app/lib/db';
-import { quizSchema } from '../chat/schema';
+import { quizSchema } from './schema';
 import { auth } from '@clerk/nextjs/server';
 
 export async function POST(req: Request) {

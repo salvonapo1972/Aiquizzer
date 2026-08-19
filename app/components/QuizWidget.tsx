@@ -3,7 +3,7 @@
 import { useObject } from "@ai-sdk/react";
 import { useState, useEffect } from "react";
 
-import { quizSchema } from "../api/chat/schema";
+import { quizSchema } from "../api/quiz/schema";
 
 interface QuizWidgetProps {
   articleId?: string;
@@ -277,7 +277,7 @@ export default function QuizWidget({
                     text-sm
                   "
                 >
-                  Quiz dell'articolo
+                  Quiz chatbot
                 </div>
 
                 <div

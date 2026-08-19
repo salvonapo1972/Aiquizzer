@@ -12,7 +12,7 @@ export default function Hero() {
       {/* Background */}
 
       <Image
-        src="/canti.png"
+        src="/quizzer.png"
         alt="Hero"
         fill
         priority
@@ -39,39 +39,17 @@ export default function Hero() {
           transition={{ delay:.2,duration:.8 }}
           className="max-w-5xl text-6xl font-bold leading-tight md:text-8xl"
         >
-          La tua Parola
+          QUIZZER
           <br />
 
-          <span className="text-amber-300">
-            è luce
+          <span className="text-amber-200 text-4xl">
+            misurati con le domande del chatbot
           </span>
 
-          <br />
-
-          sul mio cammino
+          
         </motion.h1>
 
         
-
-        <motion.div
-          initial={{ opacity:0,y:30 }}
-          animate={{ opacity:1,y:0 }}
-          transition={{ delay:.8 }}
-          className="mt-14 flex flex-col gap-4 sm:flex-row"
-        >
-        <Link href="/elenco">
-          <button  className="btn-primary flex items-center gap-2">
-
-            <BookOpen size={20}/>
-
-            Elenco dei canti
-
-          </button>
-          </Link>
-
-          
-
-        </motion.div>
 
       </div>
 
