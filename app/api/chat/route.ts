@@ -5,7 +5,7 @@ import { quizSchema } from '../chat/schema';
 
 export async function POST(req: Request) {
   console.log('=== POST /api/chat ===');
-
+  
   try {
     const body = await req.json();
 
