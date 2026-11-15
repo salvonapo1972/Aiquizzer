@@ -1,106 +1,110 @@
- # Aiquizzer
+# Aiquizzer
 
-Applicazione web basata su **Next.js** per creare, gestire e svolgere quiz con il supporto dell’intelligenza artificiale.
+Aiquizzer è un'applicazione web in italiano realizzata con **Next.js** e **React**. Offre un quiz interattivo generato con l'AI a partire da contenuti archiviati nel database: le domande includono opzioni di risposta e spiegazioni, e l'interfaccia consente di rispondere e vedere il punteggio.
+
+Il progetto include inoltre un flusso di ingestion per estrarre testo da PDF, suddividerlo in frammenti, calcolarne gli embedding e salvarli nel database per renderli disponibili alla generazione dei quiz.
+
+> Questo README descrive il branch `develop`. Il progetto è in sviluppo e alcune configurazioni, come lo schema del database e le credenziali dei servizi, devono essere predisposte separatamente.
+
+## Stack
+
+- Next.js 16, React 19 e TypeScript
+- Vercel AI SDK con provider OpenAI per generazione quiz ed embedding
+- Neon Postgres per i contenuti usati dal quiz
+- Clerk per autenticazione e protezione delle route
+- Contentful per i contenuti di tipo `song`
+- Tailwind CSS
 
 ## Requisiti
 
-- [Node.js](https://nodejs.org/) 18.18 o superiore
-- npm, pnpm o yarn
-- Una chiave API del provider AI utilizzato dal progetto, se richiesta
+- Node.js **20.9 o superiore**
+- npm (il repository include `package-lock.json`)
+- Credenziali per Clerk, OpenAI, Neon e Contentful
 
-## Installazione
+## Configurazione locale
 
-1. Clona il repository e accedi alla cartella del progetto:
+1. Clona il repository e passa al branch `develop`:
 
-	```bash
-	git clone <URL_DEL_REPOSITORY>
-	cd Aiquizzer
-	```
+   ```bash
+   git clone https://github.com/salvonapo1972/Aiquizzer.git
+   cd Aiquizzer
+   git switch develop
+   ```
 
 2. Installa le dipendenze:
 
-	```bash
-	npm install
-	```
+   ```bash
+   npm ci
+   ```
 
-	In alternativa:
+3. Crea `.env.local` nella cartella principale e configura le variabili usate dall'applicazione:
 
-	```bash
-	pnpm install
-	# oppure
-	yarn install
-	```
+   ```dotenv
+   OPENAI_API_KEY=
+   DATABASE_URL=
+   SPACE_ID=
+   ACCESS_TOKEN=
+   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+   CLERK_SECRET_KEY=
+   ```
 
-3. Crea il file delle variabili d’ambiente:
+   Recupera i valori dai rispettivi account/provider. Il repository non contiene un file `.env.example`; non committare mai `.env.local` o credenziali reali.
 
-	```bash
-	cp .env.example .env.local
-	```
+4. Avvia l'app in sviluppo:
 
-	Su Windows PowerShell:
+   ```bash
+   npm run dev
+   ```
 
-	```powershell
-	Copy-Item .env.example .env.local
-	```
+   Apri [http://localhost:3000](http://localhost:3000).
 
-	Compila `.env.local` con i valori richiesti dal progetto, ad esempio la chiave del servizio AI. Non pubblicare mai questo file né le relative chiavi.
+## Database
 
-## Avvio in sviluppo
+Il codice si aspetta una connessione Neon tramite `DATABASE_URL` e una tabella `document_sections` con almeno i campi `content`, `embedding` e `knowledge_id`. L'ingestion salva gli embedding come vettori; prepara nel database lo schema e il supporto vettoriale richiesti prima di usare questa funzionalità. In questo repository non è presente una migrazione SQL che crei la tabella.
+
+## Ingestion dei PDF
+
+È disponibile lo script `ingest`:
 
 ```bash
-npm run dev
+npm run ingest -- <knowledgeid> <nomefile>
 ```
 
-Apri [http://localhost:3000](http://localhost:3000) nel browser.
+Lo script usa OpenAI per generare gli embedding e Neon per salvarli. **Nota:** allo stato attuale il percorso del PDF è costruito nel codice con il prefisso locale `D:/Progetti/NextJs/`; modifica `ingestion/run-ingestion.tsx` per adattarlo al percorso del tuo ambiente prima di eseguire lo script.
 
 ## Script disponibili
 
-Gli script sono definiti nel file `package.json`:
-
 ```bash
-npm run dev      # avvia il server di sviluppo
-npm run build    # crea la build di produzione
-npm run start    # avvia la build di produzione
-npm run lint     # verifica il codice con il linter
+npm run dev      # server di sviluppo
+npm run build    # build di produzione
+npm run start    # avvia la build
+npm run lint     # controlli ESLint
+npm run ingest   # ingestion di un PDF (vedi sopra)
 ```
 
-## Build e produzione
+Per provare la build di produzione:
 
 ```bash
 npm run build
 npm run start
 ```
 
-Prima dell’avvio in produzione assicurati di configurare tutte le variabili d’ambiente necessarie nell’ambiente di deployment.
-
-## Struttura del progetto
-
-La struttura può variare in base alla configurazione Next.js adottata. Le directory principali sono generalmente:
+## Struttura principale
 
 ```text
-app/ o pages/     Pagine e routing dell’applicazione
-components/       Componenti React riutilizzabili
-public/            Risorse statiche
-lib/ o utils/      Funzioni di supporto e integrazioni
+app/
+  api/quiz/          Endpoint per generare il quiz
+  components/        Componenti React, incluso QuizWidget
+  lib/               Connessioni e funzioni di supporto
+  page.tsx           Pagina principale
+ingestion/            Script di ingestion dei PDF
+public/               Risorse statiche
 ```
 
-## Configurazione
+## Contribuire
 
-Le impostazioni locali devono essere inserite in `.env.local`. Usa nomi coerenti con quelli presenti in `.env.example` e riavvia il server dopo ogni modifica alle variabili d’ambiente.
-
-## Risoluzione dei problemi
-
-- Se una dipendenza non viene trovata, elimina `node_modules` e il lockfile, quindi esegui nuovamente `npm install`.
-- Se la porta 3000 è occupata, avvia Next.js con `npm run dev -- -p 3001`.
-- Se le funzionalità AI non rispondono, verifica la chiave API e i relativi permessi nel file `.env.local`.
-
-## Contributi
-
-1. Crea un branch dedicato.
-2. Implementa e verifica le modifiche.
-3. Esegui lint e build.
-4. Apri una pull request descrivendo il cambiamento.
+Apri una issue per segnalare un problema o proporre un miglioramento. Per contribuire, crea un branch dedicato e invia una pull request verso `develop`, includendo una descrizione delle modifiche e delle verifiche effettuate.
 
 ## Licenza
 
-Inserire qui la licenza del progetto.
+Nel repository non è attualmente specificata una licenza. Contatta il proprietario prima di riutilizzare o ridistribuire il codice.
